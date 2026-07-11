@@ -3673,14 +3673,29 @@ function renderAlignment(options = {}) {
                 const dataCol = document.createElement('div');
                 dataCol.className = 'aa-data';
                 if (aaSeqData) {
+                    // Position each AA under the first column of its codon by
+                    // filling any skipped columns (gaps) with 1ch-wide spacer
+                    // spans. Otherwise consecutive 3ch AAs drift left of their
+                    // real codon start whenever the codon builder skipped gaps.
+                    let nextCol = 0;
                     for (const entry of aaSeqData) {
                         const aa = entry.aa;
                         const startCol = entry.cols[0];
+                        // Insert spacers for any columns skipped since last AA
+                        while (nextCol < startCol) {
+                            const gapSpan = document.createElement('span');
+                            gapSpan.style.cssText = 'width:1ch;display:inline-block;';
+                            gapSpan.textContent = '\u00A0';
+                            dataCol.appendChild(gapSpan);
+                            nextCol++;
+                        }
                         const aaSpan = document.createElement('span');
                         aaSpan.style.cssText = 'width:3ch;display:inline-block;text-align:center;' + (aa==='*'?'color:#e74c3c;font-weight:bold;':'');
                         aaSpan.textContent = aa;
                         aaSpan.dataset.col = startCol;
                         dataCol.appendChild(aaSpan);
+                        // AA span covers 3 nucleotide columns starting at startCol
+                        nextCol = startCol + 3;
                     }
                 }
                 aaRow.appendChild(dataCol);
