@@ -2094,7 +2094,7 @@ body.codon-mode span.codon-nonsyn {
 body.codon-mode .aa-row {
     display: flex;
     align-items: flex-start;
-    font-size: 11px;
+    font-size: 13px;
     line-height: 14px;
     color: #1a5276;
     background: #f8fdf8;
